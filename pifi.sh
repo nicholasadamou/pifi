@@ -307,7 +307,7 @@ finish() {
 		Y|y)
 			echo "$(tput setaf 6)Rebooting to apply changes...$(tput sgr0)"
 			closing
-			#reboot
+			reboot
 			exit 0
 		;;
 		N|n)
