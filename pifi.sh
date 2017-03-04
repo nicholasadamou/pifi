@@ -17,7 +17,7 @@ root_check() {
 }
 
 init() {
-  echo -e "     
+	echo -e "     
 	$(tput setaf 6)   /         $(tput setaf 2)'. \ ' ' / .'$(tput setaf 6)         \\
 	$(tput setaf 6)  |   /       $(tput setaf 1).~ .~~~..~.$(tput setaf 6)       \   |
 	$(tput setaf 6) |   |   /  $(tput setaf 1) : .~.'~'.~. :$(tput setaf 6)   \   |   |
@@ -27,7 +27,7 @@ init() {
 	$(tput setaf 6) |   |   \   $(tput setaf 1)(  : '~' :  )$(tput setaf 6)   /   |   |
 	$(tput setaf 6)  |   \       $(tput setaf 1)'~ .~~~. ~'$(tput setaf 6)       /   |
 	$(tput setaf 6)   \              $(tput setaf 1)'~'$(tput setaf 6)              /
-	$(tput bold ; tput setaf 4)         $app_name$(tput sgr0)
+	$(tput bold ; tput setaf 4)             $app_name$(tput sgr0)
 	$(tput bold ; tput setaf 4)               by $(tput setaf 5)$moniker$(tput sgr0)
 	"
 
@@ -311,7 +311,7 @@ finish() {
 			exit 0
 		;;
 		N|n)
-			echo "$(tput setaf 6)Remember to reboot later to apply changes."
+			echo "$(tput setaf 6)Remember to reboot later to apply changes.$(tput sgr0)"
 		;;
 		Q|q)s
 		;;
