@@ -34,6 +34,7 @@ git clone git://github.com/NicholasAdamou/PiFi.git && cd PiFi && ./pifi.sh
 ```
 
 Follow the on-screen directions.
+
 It should take less than a minute to install.
 
 License
