@@ -1,6 +1,7 @@
 PiFi
 ========
 ![logo](logo.png)
+
 ![license](https://img.shields.io/apm/l/vim-mode.svg)
 
 PiFi configure your Raspberry Pi as a wireless access point and connect to a given SSID.
