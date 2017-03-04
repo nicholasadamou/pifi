@@ -7,7 +7,7 @@ PiFi configure your Raspberry Pi as a wireless access point and connect to a giv
 Requirements
 ------------
 
-Onion Pi Requires:
+PiFi Requires:
 
 * Raspbian Jessie (PIXEL)
 * Two WiFi Cards (e.g. On-board chip + [TL-WN725N](https://www.amazon.com/gp/product/B008IFXQFU/ref=oh_aui_detailpage_o03_s00?ie=UTF8&psc=1))
