@@ -4,7 +4,7 @@ PiFi
 
 ![license](https://img.shields.io/apm/l/vim-mode.svg)
 
-PiFi configures your Raspberry Pi as a wireless access point and connect to a given SSID.
+PiFi configures your Raspberry Pi as a wireless access point and connects to a given SSID.
 
 What it Sets Up
 ------------
