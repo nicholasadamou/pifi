@@ -12,7 +12,7 @@ declare skipQuestions=false
 trap "exit 1" TERM
 export TOP_PID=$$
 
-declare APP_NAME="Raspberry AnyFi"
+declare APP_NAME="Raspberry PiFi"
 declare MONIKER="4d4m0u"
 
 declare STATION=wlan1
@@ -107,14 +107,14 @@ setup_pifi() {
     $(tput setaf 6) |   |   \   $(tput setaf 1)(  : '~' :  )$(tput setaf 6)   /   |   |
     $(tput setaf 6)  |   \       $(tput setaf 1)'~ .~~~. ~'$(tput setaf 6)       /   |
     $(tput setaf 6)   \              $(tput setaf 1)'~'$(tput setaf 6)              /
-    $(tput bold ; tput setaf 4)         "$AP"P_NAME$(tput sgr0)
+    $(tput bold ; tput setaf 4)         $APP_NAME$(tput sgr0)
     $(tput bold ; tput setaf 4)               by $(tput setaf 5)$MONIKER$(tput sgr0)
     "
 
     echo "$(tput setaf 6)This script will configure your Raspberry Pi as a wireless access point and to connect to any OPEN WiFi access point.$(tput sgr0)"
     
     if [ "$TRAVIS" != "true" ]; then
-        read -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
+        read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
     fi
 
     update
@@ -130,7 +130,7 @@ setup_pifi() {
         install_package "$PKG" "$PKG"
     done
 
-    x=/etc/dhcp/dhcpd.conf
+    FILE=/etc/dhcp/dhcpd.conf
     sudo cp "$FILE" "$FILE".bak
 
     sudo sed -i -e 's/option domain-name "example.org"/# option domain-name "example.org"/g' "$FILE"
