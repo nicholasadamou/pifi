@@ -24,11 +24,14 @@ declare ETHER=eth0
 # ----------------------------------------------------------------------
 
 wrong_key() {
-  echo -e "$(tput setaf 6)\n-----------------------------$(tput sgr0)"
-  echo -e "$(tput setaf 6)\nError: Wrong value.\n$(tput sgr0)"
-  echo -e "$(tput setaf 6)-----------------------------\n$(tput sgr0)"
-  echo -e "$(tput setaf 6)Enter any key to continue$(tput sgr0)"
-  read -r key
+    echo -e "$(tput setaf 6)\n-----------------------------$(tput sgr0)"
+    echo -e "$(tput setaf 6)\nError: Wrong value.\n$(tput sgr0)"
+    echo -e "$(tput setaf 6)-----------------------------\n$(tput sgr0)"
+    echo -e "$(tput setaf 6)Enter any key to continue$(tput sgr0)"
+
+    if [ "$TRAVIS" != "true" ]; then
+        read -r key
+    fi
 }
 
 set_ssid() {
@@ -44,12 +47,12 @@ set_passwd() {
 }
 
 settings_show() {
-  echo -e "$(tput setaf 6)\n--------------------------------------------------\n$(tput sgr0)"
-  echo -e "$(tput setaf 6)You've specified following values:"
-  echo -e "$(tput setaf 6)\n++++++++++++++++++++++++++++++++++++++++++++++++++\n$(tput sgr0)"
-  echo -e "$(tput setaf 6)WiFi SSID:$(tput bold ; tput setaf 5) $SSID$(tput sgr0)$(tput setaf 6)"
-  echo -e "$(tput setaf 6)WPA Passphrase:$(tput bold ; tput setaf 5) $PASSWD$(tput sgr0)$(tput setaf 6)"
-  echo -e "$(tput setaf 6)\n++++++++++++++++++++++++++++++++++++++++++++++++++\n$(tput sgr0)"
+    echo -e "$(tput setaf 6)\n--------------------------------------------------\n$(tput sgr0)"
+    echo -e "$(tput setaf 6)You've specified following values:"
+    echo -e "$(tput setaf 6)\n++++++++++++++++++++++++++++++++++++++++++++++++++\n$(tput sgr0)"
+    echo -e "$(tput setaf 6)WiFi SSID:$(tput bold ; tput setaf 5) $SSID$(tput sgr0)$(tput setaf 6)"
+    echo -e "$(tput setaf 6)WPA Passphrase:$(tput bold ; tput setaf 5) $PASSWD$(tput sgr0)$(tput setaf 6)"
+    echo -e "$(tput setaf 6)\n++++++++++++++++++++++++++++++++++++++++++++++++++\n$(tput sgr0)"
 }
 
 settings_check() {
