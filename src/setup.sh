@@ -122,11 +122,11 @@ setup_pifi() {
     done
 
     x=/etc/dhcp/dhcpd.conf
-    cp "$FILE" "$FILE".bak
+    sudo cp "$FILE" "$FILE".bak
 
-    sed -i -e 's/option domain-name "example.org"/# option domain-name "example.org"/g' "$FILE"
-    sed -i -e 's/option domain-name-servers ns1.example.org/# option domain-name-servers ns1.example.org/g' "$FILE"
-    sed -i -e 's/#authoritative;/authoritative;/g' "$FILE"
+    sudo sed -i -e 's/option domain-name "example.org"/# option domain-name "example.org"/g' "$FILE"
+    sudo sed -i -e 's/option domain-name-servers ns1.example.org/# option domain-name-servers ns1.example.org/g' "$FILE"
+    sudo sed -i -e 's/#authoritative;/authoritative;/g' "$FILE"
 
     cat > "$FILE"<<- EOL
     subnet 192.168.42.0 netmask 255.255.255.0 {
@@ -141,15 +141,15 @@ setup_pifi() {
 EOL
 
     FILE=/etc/default/isc-dhcp-server
-    cp "$FILE" "$FILE".bak
+    sudo cp "$FILE" "$FILE".bak
 
-    sed -i -e 's/INTERFACES=""/INTERFACES=""$AP""/g' "$FILE"
+    sudo sed -i -e 's/INTERFACES=""/INTERFACES=""$AP""/g' "$FILE"
 
     FILE=/etc/network/interfaces
 
-    ifdown "$AP"
+    sudo ifdown "$AP"
 
-    mv "$FILE" "$FILE".bak
+    sudo mv "$FILE" "$FILE".bak
     cat > "$FILE" <<- EOL
     auto lo
 
@@ -166,7 +166,7 @@ EOL
     wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 EOL
 
-    ifconfig "$AP" 192.168.42.1
+    sudo ifconfig "$AP" 192.168.42.1
 
     FILE=/etc/hostapd/hostapd.conf
 
@@ -205,45 +205,45 @@ EOL
 EOL
 
     FILE=/etc/default/hostapd
-    cp "$FILE" "$FILE".bak
-    sed -i -e 's/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/g' "$FILE"
+    sudo cp "$FILE" "$FILE".bak
+    sudo sed -i -e 's/#DAEMON_CONF=""/DAEMON_CONF="\/etc\/hostapd\/hostapd.conf"/g' "$FILE"
 
     FILE=/etc/sysctl.conf
-    cp "$FILE" "$FILE".bak
-    echo "net.ipv4.ip_forward=1" >> "$FILE"
+    sudo cp "$FILE" "$FILE".bak
+    sudo echo "net.ipv4.ip_forward=1" >> "$FILE"
 
     FILE=/etc/network/interfaces
-    echo "up iptables-restore < /etc/iptables.ipv4.nat" >> "$FILE"
+    sudo echo "up iptables-restore < /etc/iptables.ipv4.nat" >> "$FILE"
 
-    sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
+    sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 
-    iptables -t nat -A POSTROUTING -o "$STATION" -j MASQUERADE
-    iptables -A FORWARD -i "$STATION" -o "$AP" -m state --state RELATED,ESTABLISHED -j ACCEPT
-    iptables -A FORWARD -i "$AP" -o "$STATION" -j ACCEPT
+    sudo iptables -t nat -A POSTROUTING -o "$STATION" -j MASQUERADE
+    sudo iptables -A FORWARD -i "$STATION" -o "$AP" -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i "$AP" -o "$STATION" -j ACCEPT
 
-    iptables -t nat -A POSTROUTING -o "$ETHER" -j MASQUERADE
-    iptables -A FORWARD -i "$ETHER" -o "$AP" -m state --state RELATED,ESTABLISHED -j ACCEPT
-    iptables -A FORWARD -i "$AP" -o "$ETHER" -j ACCEPT
+    sudo iptables -t nat -A POSTROUTING -o "$ETHER" -j MASQUERADE
+    sudo iptables -A FORWARD -i "$ETHER" -o "$AP" -m state --state RELATED,ESTABLISHED -j ACCEPT
+    sudo iptables -A FORWARD -i "$AP" -o "$ETHER" -j ACCEPT
 
-    sh -c "iptables-save > /etc/iptables.ipv4.nat"
+    sudo sh -c "iptables-save > /etc/iptables.ipv4.nat"
     sudo systemctl enable netfilter-persistent
 
     wget http://www.adafruit.com/downloads/adafruit_hostapd.zip
 
-    unzip adafruit_hostapd.zip
+    sudo unzip adafruit_hostapd.zip
 
     FILE=/usr/sbin/hostapd
-    mv "$FILE" "$FILE".ORIG
-    mv hostapd /usr/sbin
-    chmod 755 /usr/sbin/hostapd
+    sudo mv "$FILE" "$FILE".ORIG
+    sudo mv hostapd /usr/sbin
+    sudo chmod 755 /usr/sbin/hostapd
 
-    rm adafruit_hostapd.zip
+    sudo rm adafruit_hostapd.zip
 
-    service hostapd start
-    service isc-dhcp-server start
+    sudo service hostapd start
+    sudo service isc-dhcp-server start
 
-    update-rc.d hostapd enable
-    update-rc.d isc-dhcp-server enable
+    sudo update-rc.d hostapd enable
+    sudo update-rc.d isc-dhcp-server enable
 
     set_ssid
 	set_passwd
@@ -262,9 +262,9 @@ EOL
     }
 EOL
 
-    sudo chmod 600 "$FILE"
+    sudo sudo chmod 600 "$FILE"
 
-    mv /usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service ~/
+    sudo mv /usr/share/dbus-1/system-services/fi.epitest.hostap.WPASupplicant.service ~/
 }
 
 restart() {
