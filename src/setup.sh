@@ -143,7 +143,7 @@ EOL
     FILE=/etc/default/isc-dhcp-server
     sudo cp "$FILE" "$FILE".bak
 
-    sudo sed -i -e "s/INTERFACES=\"\"/INTERFACES=\""$AP"\"/g" "$FILE"
+    sudo sed -i -e "s/INTERFACES=\"\"/INTERFACES=\"$AP\"/g" "$FILE"
 
     FILE=/etc/network/interfaces
 
