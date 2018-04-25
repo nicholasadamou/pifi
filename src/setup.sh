@@ -103,7 +103,10 @@ setup_pifi() {
     "
 
     echo "$(tput setaf 6)This script will configure your Raspberry Pi as a wireless access point and to connect to any OPEN WiFi access point.$(tput sgr0)"
-    read -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
+    
+    if [ "$TRAVIS" != "true" ]; then
+        read -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
+    fi
 
     update
     upgrade
