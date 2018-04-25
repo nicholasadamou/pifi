@@ -143,7 +143,7 @@ EOL
     FILE=/etc/default/isc-dhcp-server
     sudo cp "$FILE" "$FILE".bak
 
-    sudo sed -i -e 's/INTERFACES=""/INTERFACES=""$AP""/g' "$FILE"
+    sudo sed -i -e "s/INTERFACES=\"\"/INTERFACES=\""$AP"\"/g" "$FILE"
 
     FILE=/etc/network/interfaces
 
@@ -210,10 +210,10 @@ EOL
 
     FILE=/etc/sysctl.conf
     sudo cp "$FILE" "$FILE".bak
-    sudo echo "net.ipv4.ip_forward=1" >> "$FILE"
+    echo "net.ipv4.ip_forward=1" >> "$FILE"
 
     FILE=/etc/network/interfaces
-    sudo echo "up iptables-restore < /etc/iptables.ipv4.nat" >> "$FILE"
+    echo "up iptables-restore < /etc/iptables.ipv4.nat" >> "$FILE"
 
     sudo sh -c "echo 1 > /proc/sys/net/ipv4/ip_forward"
 
