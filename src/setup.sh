@@ -32,11 +32,15 @@ wrong_key() {
 }
 
 set_ssid() {
-  read -r -p "$(tput setaf 6)Specify \"SSID\": " -e SSID
+    if [ "$TRAVIS" != "true" ]; then
+        read -r -p "$(tput setaf 6)Specify \"SSID\": " -e SSID
+    fi
 }
 
 set_passwd() {
-  read -r -p "$(tput setaf 6)Specify \"WPA Passphrase\": " -e PASSWD
+    if [ "$TRAVIS" != "true" ]; then
+        read -r -p "$(tput setaf 6)Specify \"WPA Passphrase\": " -e PASSWD
+    fi
 }
 
 settings_show() {
@@ -49,42 +53,44 @@ settings_show() {
 }
 
 settings_check() {
-    settings_show
-	default=Y
-	read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$ssid$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
-	settings_confirm=${settings_confirm:-$default}
-	case $settings_confirm in
-		Y|y)
-		;;
-		N|n)
-			echo -e "\n$(tput setaf 6)What would you like to edit?\n$(tput sgr0)"
-			echo "$(tput setaf 6)[1] WiFi SSID$(tput sgr0)"
-			echo "$(tput setaf 6)[2] WPA Passphrase$(tput sgr0)"
-
-			read -r -p "$(tput setaf 6)Enter option number:$(tput sgr0) " settings_edit
-			for letter in $settings_edit; do
-					if [[ "$letter" == [1] ]];
-					then
-						set_ssid
-						settings_show
-					elif [[ "$letter" == [2] ]];
-					then
-						set_passwd
-						settings_show
-					else
-						wrong_key
-						settings_check
-					fi
-			done
-		;;
-		Q|q)
-			exit 0
-		;;
-		*)
-			wrong_key
-			settings_check
-		;;
-	esac
+    if [ "$TRAVIS" != "true" ]; then
+        settings_show
+        default=Y
+        read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$ssid$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
+        settings_confirm=${settings_confirm:-$default}
+        case $settings_confirm in
+            Y|y)
+            ;;
+            N|n)
+                echo -e "\n$(tput setaf 6)What would you like to edit?\n$(tput sgr0)"
+                echo "$(tput setaf 6)[1] WiFi SSID$(tput sgr0)"
+                echo "$(tput setaf 6)[2] WPA Passphrase$(tput sgr0)"
+                
+                read -r -p "$(tput setaf 6)Enter option number:$(tput sgr0) " settings_edit
+                for letter in $settings_edit; do
+                        if [[ "$letter" == [1] ]];
+                        then
+                            set_ssid
+                            settings_show
+                        elif [[ "$letter" == [2] ]];
+                        then
+                            set_passwd
+                            settings_show
+                        else
+                            wrong_key
+                            settings_check
+                        fi
+                done
+            ;;
+            Q|q)
+                exit 0
+            ;;
+            *)
+                wrong_key
+                settings_check
+            ;;
+        esac
+    fi
 }
 
 setup_pifi() {
