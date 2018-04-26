@@ -59,7 +59,7 @@ settings_check() {
     if [ "$TRAVIS" != "true" ]; then
         settings_show
         default=Y
-        read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$ssid$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
+        read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$SSID$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
         settings_confirm=${settings_confirm:-$default}
         case $settings_confirm in
             Y|y)
