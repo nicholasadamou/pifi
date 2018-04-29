@@ -139,13 +139,13 @@ setup_pifi() {
 
     cat > "$FILE"<<- EOL
     subnet 192.168.42.0 netmask 255.255.255.0 {
-    range 192.168.42.10 192.168.42.50;
-    option broadcast-address 192.168.42.255;
-    option routers 192.168.42.1;
-    default-lease-time 600;
-    max-lease-time 7200;
-    option domain-name \042local\042;
-    option domain-name-servers 1.1.1.1, 1.0.0.1; #Cloudflare DNS
+	range 192.168.42.10 192.168.42.50;
+	option broadcast-address 192.168.42.255;
+	option routers 192.168.42.1;
+	default-lease-time 600;
+	max-lease-time 7200;
+	option domain-name \042local\042;
+	option domain-name-servers 1.1.1.1, 1.0.0.1; #Cloudflare DNS
     }
 EOL
 
