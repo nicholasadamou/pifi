@@ -122,8 +122,8 @@ setup_pifi() {
     sudo sed -i -e 's/option domain-name-servers ns1.example.org/# option domain-name-servers ns1.example.org/g' "$FILE"
     sudo sed -i -e 's/#authoritative;/authoritative;/g' "$FILE"
 
-    cat > "$FILE"<<- EOL
-    subnet 192.168.42.0 netmask 255.255.255.0 {
+    sudo bash -c "cat > $FILE" <<-EOL
+subnet 192.168.42.0 netmask 255.255.255.0 {
 	range 192.168.42.10 192.168.42.50;
 	option broadcast-address 192.168.42.255;
 	option routers 192.168.42.1;
@@ -131,7 +131,7 @@ setup_pifi() {
 	max-lease-time 7200;
 	option domain-name \042local\042;
 	option domain-name-servers 1.1.1.1, 1.0.0.1; #Cloudflare DNS
-    }
+}
 EOL
 
     FILE=/etc/default/isc-dhcp-server
@@ -144,20 +144,21 @@ EOL
     sudo ifdown "$AP"
 
     sudo mv "$FILE" "$FILE".bak
-    cat > "$FILE" <<- EOL
-    auto lo
+    
+    sudo bash -c "cat > $FILE" <<-EOL
+auto lo
 
-    iface lo inet loopback
-    iface eth0 inet dhcp
+iface lo inet loopback
+iface eth0 inet dhcp
 
-    allow-hotplug "$AP"
-    iface "$AP" inet static
-    address 192.168.42.1
-    netmask 255.255.255.0
+allow-hotplug "$AP"
+iface "$AP" inet static
+address 192.168.42.1
+netmask 255.255.255.0
 
-    allow-hotplug "$STATION"
-    iface "$STATION" inet dhcp
-    wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
+allow-hotplug "$STATION"
+iface "$STATION" inet dhcp
+wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf
 EOL
 
     sudo ifconfig "$AP" 192.168.42.1
@@ -188,20 +189,20 @@ EOL
         print_success "Password set. Edit $FILE to change."
     fi
 
-    cat > "$FILE" <<- EOL
-    interface="$AP"
-    driver=rtl871xdrv
-    ssid=$SSID
-    hw_mode=g
-    channel=6
-    macaddr_acl=0
-    auth_algs=1
-    ignore_broadcast_ssid=0
-    wpa=2
-    wpa_passphrase=$PASSWD1
-    wpa_key_mgmt=WPA2-PSK
-    wpa_pairwise=TKIP
-    rsn_pairwise=CCMP
+    sudo bash -c "cat > $FILE" <<-EOL
+interface="$AP"
+driver=rtl871xdrv
+ssid=$SSID
+hw_mode=g
+channel=6
+macaddr_acl=0
+auth_algs=1
+ignore_broadcast_ssid=0
+wpa=2
+wpa_passphrase=$PASSWD1
+wpa_key_mgmt=WPA2-PSK
+wpa_pairwise=TKIP
+rsn_pairwise=CCMP
 EOL
 
     FILE=/etc/default/hostapd
@@ -252,14 +253,14 @@ EOL
 
     FILE=/etc/wpa_supplicant/wpa_supplicant.conf
 
-    cat > "$FILE" <<- EOL
-    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-    update_config=1
+    sudo bash -c "cat > $FILE" <<-EOL
+ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
 
-    network={
-        ssid="$SSID"
-        psk="$PASSWD"
-    }
+network={
+	ssid="$SSID"
+	psk="$PASSWD"
+}
 EOL
 
     sudo sudo chmod 600 "$FILE"
