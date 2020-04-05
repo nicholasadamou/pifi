@@ -102,8 +102,8 @@ setup_pifi() {
 
     read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 
-    update
-    upgrade
+    apt_update
+    apt_upgrade
 
     declare -a PKGS=(
         "hostapd"
@@ -163,22 +163,30 @@ EOL
     sudo ifconfig "$AP" 192.168.42.1
 
     FILE=/etc/hostapd/hostapd.conf
+    sudo touch "$FILE"
 
-	print_question "Enter an SSID for the HostAPD Hotspot: "
-	SSID="$(read -r)"
+    ask "Enter an SSID for the HostAPD Hotspot: "
+    SSID="$(get_answer)"
 
-	PASSWD1="0"
-	PASSWD2="1"
-	until [ $PASSWD1 == $PASSWD2 ]; do
-		print_question "Type a password to access your $SSID, then press [ENTER]: "
-		read -s -r PASSWD1
-		print_question "Verify password to access your $SSID, then press [ENTER]: "
-		read -s -r PASSWD2
-	done
+    PASSWD1="0"
+    PASSWD2="1"
+    until [ $PASSWD1 == $PASSWD2 ]; do
+        print_question "Type a password to access '$SSID', then press [ENTER]: "
+        read -s -r
+	PASSWD1="$(get_answer)"
 
-	if [ "$PASSWD1" == "$PASSWD2" ]; then
-		print_success "Password set. Edit $FILE to change."
-	fi
+	printf "\n"
+
+        print_question "Verify password to access '$SSID', then press [ENTER]: "
+        read -s -r
+	PASSWD2="$(get_answer)"
+
+	printf "\n"
+    done
+
+    if [ "$PASSWD1" == "$PASSWD2" ]; then
+        print_success "Password set. Edit $FILE to change."
+    fi
 
     cat > "$FILE" <<- EOL
     interface="$AP"
@@ -238,9 +246,9 @@ EOL
     sudo update-rc.d isc-dhcp-server enable
 
     set_ssid
-	set_passwd
-	settings_check
-	configure_wifi
+    set_passwd
+    settings_check
+    configure_wifi
 
     FILE=/etc/wpa_supplicant/wpa_supplicant.conf
 
@@ -268,12 +276,10 @@ restart() {
 }
 
 main() {
-    # Ensure that the following actions
-    # are made relative to this file's path.
+    # Ensure that the bash utilities functions have
+    # been sourced.
 
-    cd "$(dirname "${BASH_SOURCE[0]}")" \
-        && source <(curl -s "$BASH_UTILS_URL") \
-        || exit 1
+    source <(curl -s "$BASH_UTILS_URL")
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
