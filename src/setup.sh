@@ -7,11 +7,6 @@ declare BASH_UTILS_URL="https://raw.githubusercontent.com/nicholasadamou/utiliti
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-declare skipQuestions=false
-
-trap "exit 1" TERM
-export TOP_PID=$$
-
 declare APP_NAME="Raspberry PiFi"
 declare MONIKER="4d4m0u"
 
@@ -29,21 +24,15 @@ wrong_key() {
     echo -e "$(tput setaf 6)-----------------------------\n$(tput sgr0)"
     echo -e "$(tput setaf 6)Enter any key to continue$(tput sgr0)"
 
-    if [ "$TRAVIS" != "true" ]; then
-        read -r key
-    fi
+    read -r key
 }
 
 set_ssid() {
-    if [ "$TRAVIS" != "true" ]; then
-        read -r -p "$(tput setaf 6)Specify \"SSID\": " -e SSID
-    fi
+    read -r -p "$(tput setaf 6)Specify \"SSID\": " -e SSID
 }
 
 set_passwd() {
-    if [ "$TRAVIS" != "true" ]; then
-        read -r -p "$(tput setaf 6)Specify \"WPA Passphrase\": " -e PASSWD
-    fi
+    read -r -p "$(tput setaf 6)Specify \"WPA Passphrase\": " -e PASSWD
 }
 
 settings_show() {
@@ -56,48 +45,46 @@ settings_show() {
 }
 
 settings_check() {
-    if [ "$TRAVIS" != "true" ]; then
-        settings_show
-        default=Y
-        read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$SSID$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
-        settings_confirm=${settings_confirm:-$default}
-        case $settings_confirm in
-            Y|y)
-            ;;
-            N|n)
-                echo -e "\n$(tput setaf 6)What would you like to edit?\n$(tput sgr0)"
-                echo "$(tput setaf 6)[1] WiFi SSID$(tput sgr0)"
-                echo "$(tput setaf 6)[2] WPA Passphrase$(tput sgr0)"
-                
-                read -r -p "$(tput setaf 6)Enter option number:$(tput sgr0) " settings_edit
-                for letter in $settings_edit; do
-                        if [[ "$letter" == [1] ]];
-                        then
-                            set_ssid
-                            settings_show
-                        elif [[ "$letter" == [2] ]];
-                        then
-                            set_passwd
-                            settings_show
-                        else
-                            wrong_key
-                            settings_check
-                        fi
-                done
-            ;;
-            Q|q)
-                exit 0
-            ;;
-            *)
-                wrong_key
-                settings_check
-            ;;
-        esac
-    fi
+    settings_show
+	default=Y
+	read -r -p "$(tput setaf 6)Are these settings correct for $(tput bold ; tput setaf 5)$SSID$(tput sgr0)$(tput setaf 6) [Y/n] [Default=Y] [Quit=Q/q]?$(tput sgr0) " settings_confirm
+	settings_confirm=${settings_confirm:-$default}
+	case $settings_confirm in
+		Y|y)
+		;;
+		N|n)
+			echo -e "\n$(tput setaf 6)What would you like to edit?\n$(tput sgr0)"
+			echo "$(tput setaf 6)[1] WiFi SSID$(tput sgr0)"
+			echo "$(tput setaf 6)[2] WPA Passphrase$(tput sgr0)"
+
+			read -r -p "$(tput setaf 6)Enter option number:$(tput sgr0) " settings_edit
+			for letter in $settings_edit; do
+					if [[ "$letter" == [1] ]];
+					then
+						set_ssid
+						settings_show
+					elif [[ "$letter" == [2] ]];
+					then
+						set_passwd
+						settings_show
+					else
+						wrong_key
+						settings_check
+					fi
+			done
+		;;
+		Q|q)
+			exit 0
+		;;
+		*)
+			wrong_key
+			settings_check
+		;;
+	esac
 }
 
 setup_pifi() {
-    echo -e "     
+    echo -e "
     $(tput setaf 6)   /         $(tput setaf 2)'. \ ' ' / .'$(tput setaf 6)         \\
     $(tput setaf 6)  |   /       $(tput setaf 1).~ .~~~..~.$(tput setaf 6)       \   |
     $(tput setaf 6) |   |   /  $(tput setaf 1) : .~.'~'.~. :$(tput setaf 6)   \   |   |
@@ -112,10 +99,8 @@ setup_pifi() {
     "
 
     echo "$(tput setaf 6)This script will configure your Raspberry Pi as a wireless access point and to connect to any OPEN WiFi access point.$(tput sgr0)"
-    
-    if [ "$TRAVIS" != "true" ]; then
-        read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
-    fi
+
+    read -r -p "$(tput bold ; tput setaf 2)Press [Enter] to begin, [Ctrl-C] to abort...$(tput sgr0)"
 
     update
     upgrade
@@ -127,7 +112,7 @@ setup_pifi() {
     )
 
     for PKG in "${PKGS[@]}"; do
-        install_package "$PKG" "$PKG"
+        install_package "$PKG"
     done
 
     FILE=/etc/dhcp/dhcpd.conf
@@ -179,23 +164,21 @@ EOL
 
     FILE=/etc/hostapd/hostapd.conf
 
-    if [ "$TRAVIS" != "true" ]; then
-        print_question "Enter an SSID for the HostAPD Hotspot: "
-        SSID="$(read -r)"
+	print_question "Enter an SSID for the HostAPD Hotspot: "
+	SSID="$(read -r)"
 
-        PASSWD1="0"
-        PASSWD2="1"
-        until [ $PASSWD1 == $PASSWD2 ]; do
-            print_question "Type a password to access your $SSID, then press [ENTER]: "
-            read -s -r PASSWD1
-            print_question "Verify password to access your $SSID, then press [ENTER]: "
-            read -s -r PASSWD2
-        done
+	PASSWD1="0"
+	PASSWD2="1"
+	until [ $PASSWD1 == $PASSWD2 ]; do
+		print_question "Type a password to access your $SSID, then press [ENTER]: "
+		read -s -r PASSWD1
+		print_question "Verify password to access your $SSID, then press [ENTER]: "
+		read -s -r PASSWD2
+	done
 
-        if [ "$PASSWD1" == "$PASSWD2" ]; then
-            print_success "Password set. Edit $FILE to change."
-        fi
-    fi
+	if [ "$PASSWD1" == "$PASSWD2" ]; then
+		print_success "Password set. Edit $FILE to change."
+	fi
 
     cat > "$FILE" <<- EOL
     interface="$AP"
@@ -278,7 +261,7 @@ EOL
 
 restart() {
     ask_for_confirmation "Do you want to restart?"
-    
+
     if answer_is_yes; then
         sudo shutdown -r now &> /dev/null
     fi
@@ -294,11 +277,6 @@ main() {
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-    skip_questions "$@" \
-        && skipQuestions=true
-
-    # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
     ask_for_sudo
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -306,10 +284,8 @@ main() {
     setup_pifi
 
     # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    
-    if ! $skipQuestions; then
-        restart
-    fi
+
+    restart
 }
 
-main "$@"
+main

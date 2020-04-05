@@ -1,4 +1,4 @@
-PiFi [![Build Status](https://travis-ci.org/nicholasadamou/PiFi.svg?branch=master)](https://travis-ci.org/nicholasadamou/PiFi)
+PiFi
 ========
 ![logo](logo.png)
 
